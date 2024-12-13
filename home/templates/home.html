@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block title %} home {% endblock %}
+
+{% block body %}
+
+<nav class="navbar navbar-expand-lg position-sticky top-0"
+    style="background-color: rgb(92, 93, 91); box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+    <div class="container-fluid">
+        <!-- App Name -->
+        <span class="h1" style="color:orange;">Todo_App</span>
+
+        <!-- Toggler for Mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Collapsible Content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <form method="GET" action="{% url 'search' %}" class="d-flex ms-auto" role="search">
+                {% csrf_token %}
+                <input class="form-control me-2" type="text" placeholder="Search Todo" aria-label="Search" name="search">
+                <button class="btn btn-success" type="submit">Search</button>
+              </form>
+        </div>
+    </div>
+</nav>
+
+{% if not search %}
+
+
+<div class="container mt-5" style="background-color: rgb(77, 84, 84);">
+    <h1 style="color: rgb(234, 235, 225);"><i>{% if title %} Update Todo {% else %} Add Todo {% endif %}</i></h1>
+    <hr>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <h3 style="color: aliceblue;">Enter Title :</h3>
+            <input type="text" class="form-control" id="title" name="title" {% if title %} value= "{{title}}" {% endif %} required>
+        </div>
+        <div class="mb-3">
+            <label for="desc" class="form-label text-white h3">Enter Description :</label>
+            <textarea class="form-control" id="desc" rows="4" name="desc"
+                placeholder="Enter your description here..." required>{{desc}}</textarea>
+        </div>
+        <button type="submit" class="btn btn-outline-primary btn-lg mb-2">Submit</button>
+    </form>
+</div>
+
+     {% if data %}
+<div class="container mt-5 " style="background-color: rgb(77, 84, 85);">
+    <h1 style="color: white;">Todo List</h1>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">SNo.</th>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Date</th>
+            <th>Operations</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for item in data %}
+          <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td>{{item.title}}</td>
+            <td>{{item.desc}}</td>
+            <td>{{item.date_time}}</td>
+            <td>
+                <a class="btn btn-danger" href="{% url 'delete' item.id %}">Delete</a>
+                <br>
+                <a class="btn btn-success mt-1" href="{% url 'update' item.id %}">Update</a>
+            </td>
+          </tr>
+        {% endfor %}  
+        </tbody>
+      </table>
+</div>
+     {% else %}
+<div class="container mt-5">
+    <h1 style="color: red;text-align: center;">TODO NOT FOUND !</h1>
+</div>
+     {% endif %}
+
+
+{% else %}
+
+
+     {% if data %}
+<div class="container mt-5 " style="background-color: rgb(77, 84, 85);">
+    <h1 style="color: white;">Todo List</h1>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">SNo.</th>
+            <th scope="col">Title</th>
+            <th scope="col">Description</th>
+            <th scope="col">Date</th>
+            <th>Operations</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for item in data %}
+          <tr>
+            <th scope="row">{{forloop.counter}}</th>
+            <td>{{item.title}}</td>
+            <td>{{item.desc}}</td>
+            <td>{{item.date_time}}</td>
+            <td>
+                <a class="btn btn-danger" href="{% url 'delete' item.id %}">Delete</a>
+                <a class="btn btn-success" href="{% url 'update' item.id %}">Update</a>
+            </td>
+          </tr>
+        {% endfor %}  
+        </tbody>
+      </table>
+</div>
+     {% else %}
+<div class="container mt-5">
+    <h1 style="color: red;text-align: center;">TODO NOT FOUND !</h1>
+</div>
+     {% endif %}
+
+<div class="container mt-5" style="background-color: rgb(77, 84, 84);">
+    <h1 style="color: rgb(234, 235, 225);"><i>{% if title %} Update Todo {% else %} Add Todo {% endif %}</i></h1>
+    <hr>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <h3 style="color: aliceblue;">Enter Title :</h3>
+            <input type="text" class="form-control" id="title" name="title" {% if title %} value= "{{title}}" {% endif %} required>
+        </div>
+        <div class="mb-3">
+            <label for="desc" class="form-label text-white h3">Enter Description :</label>
+            <textarea class="form-control" id="desc" rows="4" name="desc"
+                placeholder="Enter your description here..." required>{{desc}}</textarea>
+        </div>
+        <button type="submit" class="btn btn-outline-primary btn-lg mb-2">Submit</button>
+    </form>
+</div>
+
+
+{% endif %}
+
+{% endblock %}
